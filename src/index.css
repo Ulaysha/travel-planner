@@ -49,6 +49,7 @@
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
+  --color-scheme: dark;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
@@ -78,6 +79,12 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+}
+
+body {
+  background: radial-gradient(1200px 600px at 20% -10%, #1b4bd7 0%, rgba(27, 75, 215, 0) 60%),
+              linear-gradient(180deg, #0b1020 0%, #0a1430 60%, #0b1f45 100%);
+  color: #e5e7eb;
 }
 
 .dark {
@@ -119,6 +126,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
 }
