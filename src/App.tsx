@@ -44,83 +44,83 @@ const pois = [
 function App() {
   return (
     <SidebarProvider>
-      <Sidebar>
-        <SidebarHeader>
-          <div className="py-1 text-lg font-semibold">Travel Planner</div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton>
-                      <item.icon className="mr-2 h-4 w-4" />
-                      <span>{item.title}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+      <div className="min-h-screen flex">
+        <Sidebar className="bg-white/5 backdrop-blur-xl border-white/10">
+          <SidebarHeader>
+            <div className="py-1 text-lg font-semibold">Travel Planner</div>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {items.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton>
+                        <item.icon className="mr-2 h-4 w-4" />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+          <SidebarFooter>
+            <div className="px-2 py-1 text-xs text-muted-foreground">v0.1</div>
+          </SidebarFooter>
+        </Sidebar>
+         <SidebarInset className="bg-transparent flex-1  w-full min-h-screen pl-[var(--sidebar-width)]">
+          <div className="p-4">
+            <SidebarTrigger />
+            <h1 className="mt-4 text-2xl font-bold">{tripName}</h1>
+
+            <section className="mt-6">
+              <h2 className="text-lg font-semibold">Itinerary</h2>
+              <ul className="mt-2 space-y-2">
+                {itinerary.map((item) => (
+                  <li key={item.id} className="rounded-md border p-3">
+                    <div className="font-medium">{item.title}</div>
+                    <div className="text-sm text-muted-foreground">{item.date}</div>
+                    {item.notes && <div className="text-sm">{item.notes}</div>}
+                  </li>
                 ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarFooter>
-          <div className="px-2 py-1 text-xs text-muted-foreground">v0.1</div>
-        </SidebarFooter>
-      </Sidebar>
+              </ul>
+            </section>
 
-      <SidebarInset>
-        <div className="p-4">
-          <SidebarTrigger />
-          <h1 className="mt-4 text-2xl font-bold">{tripName}</h1>
+            <section className="mt-6">
+              <h2 className="text-lg font-semibold">POI Categories</h2>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {poiCategories.map((c) => (
+                  <span key={c} className="rounded-full border px-3 py-1 text-sm">
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </section>
 
-          <section className="mt-6">
-            <h2 className="text-lg font-semibold">Itinerary</h2>
-            <ul className="mt-2 space-y-2">
-              {itinerary.map((item) => (
-                <li key={item.id} className="rounded-md border p-3">
-                  <div className="font-medium">{item.title}</div>
-                  <div className="text-sm text-muted-foreground">{item.date}</div>
-                  {item.notes && <div className="text-sm">{item.notes}</div>}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="mt-6">
-            <h2 className="text-lg font-semibold">POI Categories</h2>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {poiCategories.map((c) => (
-                <span key={c} className="rounded-full border px-3 py-1 text-sm">
-                  {c}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          <section className="mt-6">
-            <h2 className="text-lg font-semibold">Points of Interest</h2>
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {pois.map((poi) => (
-                <div
-                  key={poi.id}
-                  className="rounded-xl border bg-card/50 p-4 shadow-sm transition hover:shadow-md" >
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-muted-foreground">{poi.category}</div>
-                    <span className="rounded-full border px-2 py-0.5 text-xs">
-                      {poi.location}
-                    </span>
+            <section className="mt-6">
+              <h2 className="text-lg font-semibold">Points of Interest</h2>
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {pois.map((poi) => (
+                  <div
+                    key={poi.id}
+                    className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-4 shadow-sm transition hover:shadow-md" >
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm text-muted-foreground">{poi.category}</div>
+                      <span className="rounded-full border px-2 py-0.5 text-xs">
+                        {poi.location}
+                      </span>
+                    </div>
+                    <div className="mt-2 text-lg font-semibold">{poi.name}</div>
+                    {poi.notes && <div className="mt-1 text-sm">{poi.notes}</div>}
                   </div>
-                  <div className="mt-2 text-lg font-semibold">{poi.name}</div>
-                  {poi.notes && <div className="mt-1 text-sm">{poi.notes}</div>}
-                </div>
-              ))}
-            </div>
-          </section>
-
+                ))}
+              </div>
+            </section>
         </div>
       </SidebarInset>
+      </div>
     </SidebarProvider>
   )
 }

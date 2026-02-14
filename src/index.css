@@ -82,9 +82,10 @@
 }
 
 body {
-  background: radial-gradient(1200px 600px at 20% -10%, #1b4bd7 0%, rgba(27, 75, 215, 0) 60%),
-              linear-gradient(180deg, #0b1020 0%, #0a1430 60%, #0b1f45 100%);
-  color: #e5e7eb;
+  background-image: url('/bg.jpg');
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
 }
 
 .dark {
