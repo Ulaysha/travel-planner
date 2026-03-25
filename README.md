@@ -1,73 +1,45 @@
-# React + TypeScript + Vite
+# Travel Planner
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript travel planning app that lets you create trips, manage itineraries, and visualize points of interest on a map.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Multiple Trips** — Create and switch between different trips
+- **Itinerary Management** — Add activities with dates and notes, visualized as a timeline stepper
+- **Points of Interest (POIs)** — Add restaurants, hotels, sightseeing spots, and shopping locations with coordinates
+- **Interactive Map** — View all POIs plotted on a map using mapcn (MapLibre GL)
+- **Trip Organization** — Each trip has its own itinerary and POIs
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Example Data
 
-## Expanding the ESLint configuration
+The app comes with **Cape Town Trip 2026** as an example. This includes:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Itinerary**: Sample activities on specific dates
+- **POIs**: Example restaurants, hotels, sightseeing spots, and shopping areas in Cape Town with coordinates
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+You can delete this trip and create your own, or modify it as needed.
+ **Note**: The Cape Town data is example data only. For now, all the trips and POI's will be stored in a local state. A future imporvement will be to persist the data so the data isnt deleted once the page is refreshed
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Usage
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. **Create a Trip** — Click "+ New Trip" in the sidebar
+2. **Add Itinerary Items** — Click "+ Add Item" and enter activity details
+3. **Add POIs** — Click "+ Add POI" and provide coordinates (lat/lng)
+4. **View on Map** — POIs automatically appear on the map section
+5. **Switch Trips** — Click any trip name in the sidebar to switch
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Project Status
+Future improvements may include:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Geocoding addresses to coordinates automatically
+- Persist data to localStorage or a database
+- Edit/delete functionality for itinerary items and POIs
+- Trip sharing and collaboration
+- Calendar view for itinerary
+
+---
+
+
+

@@ -2,6 +2,8 @@
 //Created grid with 2 columns to show itinerary and POI cards
 //Mapcn will only plot co-ords. so we will need to use a geocoder to map addresses
 //Using OpenStreetMap but wikl need to add caching since it is rate limited
+
+//TODO: Separate into smaller files 
 import { useState } from "react"
 import {
   Sidebar,
@@ -36,21 +38,7 @@ const items = [
   { title: 'Settings', icon: Settings },
 ]
 
-const tripName = 'Cape Town Trip 2026'
-
 const poiCategories = ['Restaurants', 'Hotels', 'Sightseeing', 'Shopping']
-
-const itinerary = [
-  { id: 'i1', title: 'Arrive in Cape Town', date: '2026-02-20', notes: 'Check in' },
-  { id: 'i2', title: 'Asakusa + Skytree', date: '2026-03-11', notes: 'Sunset view' },
-]
-
-const pois = [
-  { id: 'p1', name: 'Kloof Street House', category: 'Restaurants', location: 'Gardens', notes: 'Book ahead', lat: -33.9341, lng: 18.4128 },
-  { id: 'p2', name: 'The Table Bay Hotel', category: 'Hotels', location: 'V&A Waterfront', notes: 'Harbor view', lat: -33.9064, lng: 18.4200 },
-  { id: 'p3', name: 'Table Mountain', category: 'Sightseeing', location: 'Table Mountain NP', notes: 'Go early', lat: -33.9628, lng: 18.4098 },
-  { id: 'p4', name: 'V&A Waterfront', category: 'Shopping', location: 'Waterfront', notes: '', lat: -33.9066, lng: 18.4199 },
-]
 
 type ItineraryItem = {
   id: string
@@ -69,6 +57,13 @@ type Poi = {
   lng: number
 }
 
+type Trip = {
+  id: string
+  name: string
+  itinerary: ItineraryItem[]
+  pois: Poi[]
+}
+
 const initialItinerary: ItineraryItem[] = [
   { id: 'i1', title: 'Arrive in Cape Town', date: '2026-02-20', notes: 'Check in' },
   { id: 'i2', title: 'Asakusa + Skytree', date: '2026-03-11', notes: 'Sunset view' },
@@ -82,10 +77,21 @@ const initialPois: Poi[] = [
 ]
 
 function App() {
-  const [itinerary, setItinerary] = useState<ItineraryItem[]>(initialItinerary)
-  const [pois, setPois] = useState<Poi[]>(initialPois)
+  const [trips, setTrips] = useState<Trip[]>([
+    {
+      id: '1',
+      name: 'Cape Town Trip 2026',
+      itinerary: initialItinerary,
+      pois: initialPois,
+    },
+  ])
+  const [selectedTripId, setSelectedTripId] = useState('1')
+  const [openAddTrip, setOpenAddTrip] = useState(false)
   const [openAddItinerary, setOpenAddItinerary] = useState(false)
   const [openAddPoi, setOpenAddPoi] = useState(false)
+
+  const currentTrip = trips.find((t) => t.id === selectedTripId)
+  if (!currentTrip) return <div>No trip selected</div>
 
   return (
     <SidebarProvider>
@@ -96,18 +102,64 @@ function App() {
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+              <SidebarGroupLabel>Trips</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton>
-                        <item.icon className="mr-2 h-4 w-4" />
-                        <span>{item.title}</span>
+                  {trips.map((trip) => (
+                    <SidebarMenuItem key={trip.id}>
+                      <SidebarMenuButton
+                        isActive={selectedTripId === trip.id}
+                        onClick={() => setSelectedTripId(trip.id)}
+                      >
+                        <Luggage className="mr-2 h-4 w-4" />
+                        <span>{trip.name}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>
+                <Dialog open={openAddTrip} onOpenChange={setOpenAddTrip}>
+                  <DialogTrigger asChild>
+                    <button className="mt-2 w-full rounded-md border border-white/20 bg-white/10 px-3 py-1 text-sm hover:bg-white/20">
+                      + New Trip
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Create New Trip</DialogTitle>
+                    </DialogHeader>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault()
+                        const formData = new FormData(e.currentTarget)
+                        const newTrip: Trip = {
+                          id: Date.now().toString(),
+                          name: formData.get('name') as string,
+                          itinerary: [],
+                          pois: [],
+                        }
+                        setTrips([...trips, newTrip])
+                        setSelectedTripId(newTrip.id)
+                        setOpenAddTrip(false)
+                        e.currentTarget.reset()
+                      }}
+                      className="space-y-4"
+                    >
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Trip name"
+                        className="w-full rounded border border-gray-300 bg-white px-2 py-2 text-sm text-gray-900 placeholder-gray-500"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        className="w-full rounded bg-blue-600 py-2 text-sm text-white hover:bg-blue-700"
+                      >
+                        Create Trip
+                      </button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
@@ -118,7 +170,7 @@ function App() {
          <SidebarInset className="bg-transparent flex-1 min-h-screen">
           <div className="w-full px-0">
             <SidebarTrigger />
-            <h1 className="mt-4 text-2xl font-bold">{tripName}</h1>
+            <h1 className="mt-4 text-2xl font-bold">{currentTrip.name}</h1>
             <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-start">
               <section className="mt-6 lg:w-[35%]">
                 <h2 className="text-lg font-semibold">Itinerary</h2>
@@ -142,7 +194,11 @@ function App() {
                           date: formData.get('date') as string,
                           notes: formData.get('notes') as string,
                         }
-                        setItinerary([...itinerary, newItem])
+                        setTrips(trips.map((t) =>
+                          t.id === selectedTripId
+                            ? { ...t, itinerary: [...t.itinerary, newItem] }
+                            : t
+                        ))
                         setOpenAddItinerary(false)
                         e.currentTarget.reset()
                       }}
@@ -176,11 +232,11 @@ function App() {
                     </form>
                   </DialogContent>
                 </Dialog>
-                <div className="mt-4 rounded-2xl border Sborder-white/15 bg-white/10 backdrop-blur-md p-4 shadow-sm">
+                <div className="mt-4 rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md p-4 shadow-sm">
                   <ul className="space-y-4">
-                    {itinerary.map((item, index) => (
+                    {currentTrip.itinerary.map((item, index) => (
                       <li key={item.id} className="relative pl-1">
-                        {index !== itinerary.length - 1 && (
+                        {index !== currentTrip.itinerary.length - 1 && (
                           <span className="absolute left-[2px] top-6 h-full w-px bg-white/20" />
                         )}
                         <span className="absolute left-0 top-1.5 h-3 w-3 rounded-full bg-white shadow-[0_0_0_4px_rgba(255,255,255,0.08)]" />
@@ -221,7 +277,11 @@ function App() {
                           lat: parseFloat(formData.get('lat') as string),
                           lng: parseFloat(formData.get('lng') as string),
                         }
-                        setPois([...pois, newPoi])
+                        setTrips(trips.map((t) =>
+                          t.id === selectedTripId
+                            ? { ...t, pois: [...t.pois, newPoi] }
+                            : t
+                        ))
                         setOpenAddPoi(false)
                         e.currentTarget.reset()
                       }}
@@ -285,7 +345,7 @@ function App() {
                   </DialogContent>
                 </Dialog>
                 <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {pois.map((poi) => (
+                  {currentTrip.pois.map((poi) => (
                     <div
                       key={poi.id}
                       className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-4 shadow-sm transition hover:shadow-md"
@@ -313,7 +373,7 @@ function App() {
                   center={[18.4241, -33.9249]} // [lng, lat] for Cape Town
                   zoom={12}>
                   <MapControls showZoom showLocate />
-                  {pois.map((poi) => (
+                  {currentTrip.pois.map((poi) => (
                     <MapMarker
                       key={poi.id}
                       longitude={poi.lng}
